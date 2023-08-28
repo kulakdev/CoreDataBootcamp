@@ -96,34 +96,8 @@ struct ContentView: View {
             }
         }
     }
-
-    private func addItem() {
-        withAnimation {
-            let newItem = TaskEntity(context: viewContext)
-            newItem.name = textFieldText
-            saveItems()
-            textFieldText = ""
-        }
-    }
-
-    private func deleteItems(offsets: IndexSet) {
-        withAnimation {
-            guard let index = offsets.first else { return }
-            let taskEntity = tasks[index]
-            viewContext.delete(taskEntity)
-//            offsets.map { tasks[$0] }.forEach(viewContext.delete)
-            saveItems()
-        }
-    }
     
-    private func saveItems() {
-        do {
-            try viewContext.save()
-        } catch {
-            let nsError = error as NSError
-            fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
-        }
-    }
+    
     
     @ViewBuilder
     func CreateTaskOverlayView(isCreatorOpen: Bool, geometry: GeometryProxy) -> some View {
@@ -176,6 +150,34 @@ struct ContentView: View {
         .frame(width: geometry.size.width)
         .frame(height: UIScreen.main.bounds.height + 15)
         .background(.ultraThinMaterial)
+    }
+
+    private func addItem() {
+        withAnimation {
+            let newItem = TaskEntity(context: viewContext)
+            newItem.name = textFieldText
+            saveItems()
+            textFieldText = ""
+        }
+    }
+
+    private func deleteItems(offsets: IndexSet) {
+        withAnimation {
+            guard let index = offsets.first else { return }
+            let taskEntity = tasks[index]
+            viewContext.delete(taskEntity)
+//            offsets.map { tasks[$0] }.forEach(viewContext.delete)
+            saveItems()
+        }
+    }
+    
+    private func saveItems() {
+        do {
+            try viewContext.save()
+        } catch {
+            let nsError = error as NSError
+            fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
+        }
     }
 }
 
