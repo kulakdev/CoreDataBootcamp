@@ -20,11 +20,14 @@ struct ContentView: View {
     
     let myColor = Color(#colorLiteral(red: 0.3098039216, green: 0.7607843137, blue: 0.7882352941, alpha: 1))
     var body: some View {
+        GeometryReader { geometry in
         ScrollView {
             NavigationView {
-                
                 ZStack {
                     VStack(spacing: 20) {
+                        if isCreatorOpen == true {
+                            CreateTaskOverlayView(isCreatorOpen: isCreatorOpen, geometry: geometry)
+                        }
                         TextField("Create task", text: $textFieldText)
                             .font(.headline)
                             .padding(.leading)
@@ -86,6 +89,9 @@ struct ContentView: View {
                             }
                         }
                     }
+                    .frame(maxHeight: .infinity)
+                }
+                
                 }
             }
         }
@@ -120,7 +126,7 @@ struct ContentView: View {
     }
     
     @ViewBuilder
-    func CreateTaskOverlayView(isCreatorOpen: Bool) -> some View {
+    func CreateTaskOverlayView(isCreatorOpen: Bool, geometry: GeometryProxy) -> some View {
         ZStack{
             VStack {
                 HStack {
@@ -147,7 +153,10 @@ struct ContentView: View {
                     .cornerRadius(10)
                 HStack {
                     Spacer()
-                    Button {} label: {
+                    Button {
+                        addItem()
+                        self.isCreatorOpen = !isCreatorOpen
+                    } label: {
                         Text("Accept")
                             .padding(7)
                             .foregroundColor(.white)
@@ -163,6 +172,10 @@ struct ContentView: View {
             .cornerRadius(20)
             
         }
+        .zIndex(3)
+        .frame(width: geometry.size.width)
+        .frame(height: UIScreen.main.bounds.height + 15)
+        .background(.ultraThinMaterial)
     }
 }
 
